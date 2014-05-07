@@ -19,7 +19,7 @@ def view_graphs():
 
 @app.route('/history.json')
 def get_graph_data():
-    res = requests.get("http://localhost:5984/crafts/_design/crafts/_list/history/summary")
+    res = requests.get("http://localhost:5984/crafts/_design/crafts/_list/history/aggregate")
     return Response(res.text, mimetype='application/json')
 
 if __name__ == '__main__':
