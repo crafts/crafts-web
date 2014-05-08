@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
 from couchdb import Server
+from crafts.common.metrics import AggregateCollection
+from crafts.common.metrics import PredictionCollection
 from flask import Flask
 from flask import render_template
+from flask import request
 from flask import Response
-import requests
+import json
+import time
 
 app = Flask(__name__)
 db = Server()['crafts']
@@ -17,10 +21,26 @@ def home():
 def view_graphs():
     return render_template('history.html')
 
-@app.route('/history.json')
-def get_graph_data():
-    res = requests.get("http://localhost:5984/crafts/_design/crafts/_list/history/aggregate")
-    return Response(res.text, mimetype='application/json')
+@app.route('/aggregates')
+def get_aggregate_data():
+    role = request.args.get('role')
+    data = AggregateCollection(db, role)
+    data.get()
+
+    result = [(time.mktime(timestamp.timetuple()) * 1000, value['requests']['sum'])
+            for (timestamp, value) in sorted(data.items())]
+    return Response(json.dumps(result), mimetype='application/json')
+
+@app.route('/predictions')
+def get_predictions_data():
+    role = request.args.get('role')
+    data = PredictionCollection(db, role)
+    data.get()
+
+    result = [(time.mktime(timestamp.timetuple()) * 1000, value['requests']['sum'])
+            for (timestamp, value) in sorted(data.items())]
+    return Response(json.dumps(result), mimetype='application/json')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
