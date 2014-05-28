@@ -32,6 +32,9 @@ $(function() {
          title : {
             text : 'CRAFTS Data'
          },
+         yAxis: {
+            floor: 0
+         },
          series : seriesData
       });
    }
