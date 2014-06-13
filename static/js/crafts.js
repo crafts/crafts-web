@@ -27,7 +27,23 @@ $(function() {
       $('#chart').highcharts('StockChart', {
          rangeSelector : {
             selected : 1,
-            inputEnabled: $('#container').width() > 480
+            inputEnabled: true,
+            buttons: [{
+               type: 'day',
+               count: 1,
+               text: '1d'
+            }, {
+               type: 'week',
+               count: 1,
+               text: '1w'
+            }, {
+               type: 'month',
+               count: 1,
+               text: '1m'
+            }, {
+               type: 'all',
+               text: 'All'
+            }]
          },
          title : {
             text : 'CRAFTS Data'
