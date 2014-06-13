@@ -8,7 +8,7 @@ from flask import render_template
 from flask import request
 from flask import Response
 import json
-import time
+import calendar
 
 app = Flask(__name__)
 db = Server()['crafts']
@@ -27,7 +27,7 @@ def get_aggregate_data():
     data = AggregateCollection(db, role)
     data.get()
 
-    result = [(time.mktime(timestamp.timetuple()) * 1000, value['requests']['sum'])
+    result = [(calendar.timegm(timestamp.timetuple()) * 1000, value['requests']['sum'])
             for (timestamp, value) in sorted(data.items())]
     return Response(json.dumps(result), mimetype='application/json')
 
@@ -37,7 +37,7 @@ def get_predictions_data():
     data = PredictionCollection(db, role)
     data.get()
 
-    result = [(time.mktime(timestamp.timetuple()) * 1000, value['requests']['sum'])
+    result = [(calendar.timegm(timestamp.timetuple()) * 1000, value['requests']['sum'])
             for (timestamp, value) in sorted(data.items())]
     return Response(json.dumps(result), mimetype='application/json')
 
